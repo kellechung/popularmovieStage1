@@ -1,3 +1,3 @@
 # popularmovieStage1
 
-Add movie db api key to folder
+Add movie db api key to string.xml
