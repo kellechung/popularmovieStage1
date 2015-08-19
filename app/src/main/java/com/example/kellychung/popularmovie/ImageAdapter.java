@@ -72,6 +72,7 @@ public class ImageAdapter extends android.widget.BaseAdapter {
         }
         com.squareup.picasso.Picasso.with(context)
                 .load(items.get(position))
+                .error(R.drawable.sample_6)
                 .into(imageView);
         return imageView;
     }
