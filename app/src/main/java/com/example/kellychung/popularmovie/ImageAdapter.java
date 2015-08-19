@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-/** This is the custom adapter for the grid view of images **/
+/**
+ * This is the custom adapter for the grid view of images
+ **/
 
 
 public class ImageAdapter extends android.widget.BaseAdapter {
@@ -17,7 +19,7 @@ public class ImageAdapter extends android.widget.BaseAdapter {
     private java.util.ArrayList<String> items;
     android.view.LayoutInflater inflater;
 
-    public ImageAdapter(Context context,  ArrayList<String> items) {
+    public ImageAdapter(Context context, ArrayList<String> items) {
         this.context = context;
         this.items = items;
         inflater = (android.view.LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

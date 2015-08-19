@@ -35,16 +35,24 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
     movie[] movieArray;
     ImageAdapter imageAdapter;
     ArrayList<String> posterURLS;
+    ArrayList<movie> movieArrayList;
 
 
     public MainActivityFragment() {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if (savedInstanceState == null || !savedInstanceState.containsKey("movieKey")) {
+
+            ArrayList<movie> movieArrayList = new ArrayList<movie>();
+
+        } else {
+            movieArrayList = savedInstanceState.getParcelableArrayList("movieKey");
+        }
 
         posterURLS = new ArrayList<>();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
@@ -62,6 +70,13 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("movieKey", movieArrayList);
+        super.onSaveInstanceState(outState);
+
+
+    }
 
     public void updateMovie() {
         SharedPreferences sortPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -102,8 +117,8 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-      Intent intent = new Intent(getActivity(),MovieDetailActivity.class);
-      intent.putExtra("original_Title", movieArray[position].original_title) ;
+        Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
+        intent.putExtra("original_Title", movieArray[position].original_title);
         intent.putExtra("posterUrl", movieArray[position].posterUrl);
         intent.putExtra("releaseDate", movieArray[position].release_Date);
         intent.putExtra("overview", movieArray[position].overview);
@@ -158,7 +173,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
             //String[] posterPaths = new String[movieInfoArray.length()];
 
-           movieArray = new movie[movieInfoArray.length()];
+            movieArray = new movie[movieInfoArray.length()];
 
             for (int i = 0; i < movieInfoArray.length(); i++) {
 
@@ -172,6 +187,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
                 movie movieObj = new movie(original_title, posterUrl, overview, release_Date, vote_average);
                 movieArray[i] = movieObj;
+
             }
 
             return movieArray;
