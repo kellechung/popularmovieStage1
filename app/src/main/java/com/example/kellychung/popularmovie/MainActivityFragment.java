@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.Toast;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -48,7 +51,8 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movieKey")) {
 
-            ArrayList<movie> movieArrayList = new ArrayList<movie>();
+            movieArrayList = new ArrayList<movie>();
+            updateMovie();
 
         } else {
             movieArrayList = savedInstanceState.getParcelableArrayList("movieKey");
@@ -61,7 +65,6 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
         imageAdapter = new ImageAdapter(getActivity(), posterURLS);
         movieView.setAdapter(imageAdapter);
-        updateMovie();
         imageAdapter.notifyDataSetChanged();
         movieView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
@@ -101,10 +104,26 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
         url = uri.toString() + "&api_key=" + getString(R.string.apiKey);
         Log.e("uri builder ", url);
+
+
+        //Calling to async task in background thread if internet connection is available
+
+        if (isNetworkAvailable()) {
+
         fetchMoviePoster posterTask = new fetchMoviePoster();
-        posterTask.execute(url);
+        posterTask.execute(url); }
+
+        else Toast.makeText(getActivity(),"No internet connection available", Toast.LENGTH_SHORT).show();
 
 
+    }
+
+    //Based on a stackoverflow snippet
+    private boolean isNetworkAvailable() {
+         ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
+         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 
@@ -139,8 +158,9 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
         int id = item.getItemId();
         if (id == R.id.action_sort) {
 
-            fetchMoviePoster posterTask = new fetchMoviePoster();
-            posterTask.execute();
+            updateMovie();
+            //fetchMoviePoster posterTask = new fetchMoviePoster();
+            //posterTask.execute();
             return true;
 
         }

@@ -69,7 +69,10 @@
 
 
     </LinearLayout>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView">
     <TextView
         android:id="@+id/txtViewOverview"
         android:layout_width="wrap_content"
@@ -77,4 +80,5 @@
         android:textStyle="italic"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#010101"/>
+     </ScrollView>
 </LinearLayout>

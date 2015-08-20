@@ -32,9 +32,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         android.util.Log.e("Poster url", posterUrl);
         ImageView imageViewMovie = (ImageView) findViewById(R.id.imageViewMovie);
 
-                com.squareup.picasso.Picasso.with(getApplicationContext())
+        com.squareup.picasso.Picasso.with(getApplicationContext())
                 .load(posterUrl)
-                        .into(imageViewMovie);
+                .into(imageViewMovie);
 
         //Setting the vote average
         String voteAvg = intent.getStringExtra("vote_average");
@@ -43,9 +43,10 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         //Setting the release date
         String release_date = intent.getStringExtra("releaseDate");
-        TextView txtViewReleaseDate = (TextView)findViewById(R.id.txtViewReleaseDate);
-        txtViewReleaseDate.setText(release_date.substring(0,4));
+        TextView txtViewReleaseDate = (TextView) findViewById(R.id.txtViewReleaseDate);
 
+        if (release_date.length() == 0) txtViewReleaseDate.setText("");
+        else txtViewReleaseDate.setText(release_date.substring(0, 4));
 
 
     }
