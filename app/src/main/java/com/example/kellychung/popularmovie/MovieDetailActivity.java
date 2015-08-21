@@ -45,8 +45,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         String release_date = intent.getStringExtra("releaseDate");
         TextView txtViewReleaseDate = (TextView) findViewById(R.id.txtViewReleaseDate);
 
-        if (release_date.length() == 0) txtViewReleaseDate.setText("");
-        else txtViewReleaseDate.setText(release_date.substring(0, 4));
+        if (release_date.length() != 0 && release_date.length() >= 4) txtViewReleaseDate.setText(release_date.substring(0, 4));
 
 
     }
@@ -68,6 +67,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+
+        else if (id == android.R.id.home) {
+            onBackPressed();
             return true;
         }
 

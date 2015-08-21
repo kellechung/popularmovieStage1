@@ -28,7 +28,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.Toast;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -52,7 +51,6 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
         if (savedInstanceState == null || !savedInstanceState.containsKey("movieKey")) {
 
             movieArrayList = new ArrayList<movie>();
-            updateMovie();
 
         } else {
             movieArrayList = savedInstanceState.getParcelableArrayList("movieKey");
@@ -104,21 +102,13 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
         url = uri.toString() + "&api_key=" + getString(R.string.apiKey);
         Log.e("uri builder ", url);
-
-
-        //Calling to async task in background thread if internet connection is available
-
-        if (isNetworkAvailable()) {
+        
 
         fetchMoviePoster posterTask = new fetchMoviePoster();
-        posterTask.execute(url); }
-
-        else Toast.makeText(getActivity(),"No internet connection available", Toast.LENGTH_SHORT).show();
+        posterTask.execute(url);}
 
 
-    }
-
-    //Based on a stackoverflow snippet
+    //Based on a stackoverflow snippet & unused for now
     private boolean isNetworkAvailable() {
          ConnectivityManager connectivityManager
                 = (ConnectivityManager) getActivity().getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
