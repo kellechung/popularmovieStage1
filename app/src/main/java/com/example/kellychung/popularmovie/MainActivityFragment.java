@@ -87,12 +87,12 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
             movieArrayList = new ArrayList<movie>();
             updateMovie();
 
-            Log.e("On Create", "new instance");
+            //Log.e("On Create", "new instance");
 
         } else {
             //Retrieving movie from parcel
             movieArrayList = savedInstanceState.getParcelableArrayList("movieKey");
-            Log.e("On Create", "Use parcelable");
+            //Log.e("On Create", "Use parcelable");
 
         }
 
@@ -109,7 +109,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
         super.onResume();
     }
 
-        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         public void onSharedPreferenceChanged(
                 SharedPreferences prefs, String key) {
             updateMovie();
@@ -119,7 +119,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
     @Override
     public void onDestroy() {
-        Log.e("On Destroy:", "On destroyed invoked");
+        // Log.e("On Destroy:", "On destroyed invoked");
 
         //Unregistering preference listener on destroy
         SharedPreferences sortPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -128,12 +128,11 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
     }
 
 
-
     public void updateMovie() {
 
         SharedPreferences sortPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortOrder = sortPrefs.getString(getString(R.string.pref_sort_key), getString(R.string.most_popular));
-        Log.e("Call to movie update ", " fetching data");
+        //Log.e("Call to movie update ", " fetching data");
         Uri uri;
         String url;
 
@@ -163,7 +162,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
     }
 
 
-    //Based on a stackoverflow snippet & unused for now
+    //Based on a stackoverflow snippet 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getActivity().getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
