@@ -47,7 +47,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
+        // Log.e("On Create View", "new instance");
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView movieView = (GridView) rootView
                 .findViewById(R.id.list_movie_item);
@@ -56,7 +56,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
         imageAdapter = new ImageAdapter(getActivity(), movieArrayList);
         movieView.setAdapter(imageAdapter);
         imageAdapter.notifyDataSetChanged();
-        Log.e("On Create View", "new instance");
+
         movieView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
 
