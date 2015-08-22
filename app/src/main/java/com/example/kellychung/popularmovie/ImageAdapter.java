@@ -16,10 +16,10 @@ import android.widget.ImageView;
 public class ImageAdapter extends android.widget.BaseAdapter {
 
     private android.content.Context context;
-    private java.util.ArrayList<String> items;
+    private java.util.ArrayList<movie> items;
     android.view.LayoutInflater inflater;
 
-    public ImageAdapter(Context context, ArrayList<String> items) {
+    public ImageAdapter(Context context, ArrayList<movie> items) {
         this.context = context;
         this.items = items;
         inflater = (android.view.LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -32,9 +32,8 @@ public class ImageAdapter extends android.widget.BaseAdapter {
     }
 
 
-    public void add(String object) {
+    public void add(movie object) {
         items.add(object);
-        //Log.e("Add", items.size() + "");
         super.notifyDataSetChanged();
     }
 
@@ -52,8 +51,6 @@ public class ImageAdapter extends android.widget.BaseAdapter {
         items.clear();
         super.notifyDataSetChanged();
 
-        //String m = getCount() + "";
-        // Log.e("Image Loader", m);
 
     }
 
@@ -71,7 +68,7 @@ public class ImageAdapter extends android.widget.BaseAdapter {
             imageView = (ImageView) convertView;
         }
         com.squareup.picasso.Picasso.with(context)
-                .load(items.get(position))
+                .load(items.get(position).getPosterUrl())
                 .error(R.drawable.sample_6)
                 .into(imageView);
         return imageView;

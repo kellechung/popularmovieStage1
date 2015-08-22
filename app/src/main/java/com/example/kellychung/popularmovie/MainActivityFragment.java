@@ -12,13 +12,11 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +26,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -36,7 +36,6 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
     movie[] movieArray;
     ImageAdapter imageAdapter;
-    ArrayList<String> posterURLS;
     ArrayList<movie> movieArrayList;
 
 
@@ -48,24 +47,20 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (savedInstanceState == null || !savedInstanceState.containsKey("movieKey")) {
 
-            movieArrayList = new ArrayList<movie>();
-
-        } else {
-            movieArrayList = savedInstanceState.getParcelableArrayList("movieKey");
-        }
-
-        posterURLS = new ArrayList<>();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView movieView = (GridView) rootView
                 .findViewById(R.id.list_movie_item);
 
-        imageAdapter = new ImageAdapter(getActivity(), posterURLS);
+
+        imageAdapter = new ImageAdapter(getActivity(), movieArrayList);
         movieView.setAdapter(imageAdapter);
         imageAdapter.notifyDataSetChanged();
+        Log.e("On Create View", "new instance");
         movieView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
+
+
         return rootView;
 
 
@@ -73,17 +68,72 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("movieKey", movieArrayList);
+
+        //Movie to parcel
+        if (movieArrayList != null) {
+            outState.putParcelableArrayList("movieKey", movieArrayList);
+        }
         super.onSaveInstanceState(outState);
 
 
     }
 
+
+    @Override
+    public void onCreate(android.os.Bundle savedInstanceState) {
+        if (savedInstanceState == null || !savedInstanceState.containsKey("movieKey")) {
+
+            //Update movie if no parcel is found
+            movieArrayList = new ArrayList<movie>();
+            updateMovie();
+
+            Log.e("On Create", "new instance");
+
+        } else {
+            //Retrieving movie from parcel
+            movieArrayList = savedInstanceState.getParcelableArrayList("movieKey");
+            Log.e("On Create", "Use parcelable");
+
+        }
+
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        Log.e("onResume", "Call to onResume");
+
+        //Adding a listener to onResume so data is fetched where preference is updated
+        SharedPreferences sortPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sortPrefs.registerOnSharedPreferenceChangeListener(listener);
+        super.onResume();
+    }
+
+        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        public void onSharedPreferenceChanged(
+                SharedPreferences prefs, String key) {
+            updateMovie();
+        }
+    };
+
+
+    @Override
+    public void onDestroy() {
+        Log.e("On Destroy:", "On destroyed invoked");
+
+        //Unregistering preference listener on destroy
+        SharedPreferences sortPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sortPrefs.unregisterOnSharedPreferenceChangeListener(listener);
+        super.onDestroy();
+    }
+
+
+
     public void updateMovie() {
+
         SharedPreferences sortPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortOrder = sortPrefs.getString(getString(R.string.pref_sort_key), getString(R.string.most_popular));
-
-        Log.e("SORT_PREF", sortOrder);
+        Log.e("Call to movie update ", " fetching data");
         Uri uri;
         String url;
 
@@ -102,36 +152,34 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
         url = uri.toString() + "&api_key=" + getString(R.string.apiKey);
         Log.e("uri builder ", url);
-        
 
-        fetchMoviePoster posterTask = new fetchMoviePoster();
-        posterTask.execute(url);}
+
+        if (isNetworkAvailable()) {
+            Log.e("Network info", "Network connected");
+
+            fetchMoviePoster posterTask = new fetchMoviePoster();
+            posterTask.execute(url);
+        }
+    }
 
 
     //Based on a stackoverflow snippet & unused for now
     private boolean isNetworkAvailable() {
-         ConnectivityManager connectivityManager
+        ConnectivityManager connectivityManager
                 = (ConnectivityManager) getActivity().getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
-         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 
-    public void onStart() {
-        //Update when fragment starts
-        Log.e("ON_START", "On start call");
-        super.onStart();
-        updateMovie();
-    }
-
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-        intent.putExtra("original_Title", movieArray[position].original_title);
-        intent.putExtra("posterUrl", movieArray[position].posterUrl);
-        intent.putExtra("releaseDate", movieArray[position].release_Date);
-        intent.putExtra("overview", movieArray[position].overview);
-        intent.putExtra("vote_average", movieArray[position].vote_average);
+        intent.putExtra("original_Title", movieArrayList.get(position).original_title);
+        intent.putExtra("posterUrl", movieArrayList.get(position).posterUrl);
+        intent.putExtra("releaseDate", movieArrayList.get(position).release_Date);
+        intent.putExtra("overview", movieArrayList.get(position).overview);
+        intent.putExtra("vote_average", movieArrayList.get(position).vote_average);
         startActivity(intent);
 
     }
@@ -149,8 +197,6 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
         if (id == R.id.action_sort) {
 
             updateMovie();
-            //fetchMoviePoster posterTask = new fetchMoviePoster();
-            //posterTask.execute();
             return true;
 
         }
@@ -181,9 +227,8 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
             JSONArray movieInfoArray = movieJson.getJSONArray(MOVIE_PAGE);
 
 
-            //String[] posterPaths = new String[movieInfoArray.length()];
-
             movieArray = new movie[movieInfoArray.length()];
+
 
             for (int i = 0; i < movieInfoArray.length(); i++) {
 
@@ -246,7 +291,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
                 movieJsonStr = buffer.toString();
 
-                Log.v(LOG_TAG, "Movie poster string: " + movieJsonStr);
+                //Log.v(LOG_TAG, "Movie poster string: " + movieJsonStr);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 return null;
@@ -282,10 +327,10 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
             if (movieResult != null) {
                 imageAdapter.clear();
-                posterURLS.clear();
+
 
                 for (int i = 0; i < movieResult.length; i++) {
-                    imageAdapter.add(movieResult[i].posterUrl);
+                    imageAdapter.add(movieResult[i]);
 
                 }
 

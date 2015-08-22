@@ -29,7 +29,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         //Getting the movie url and loading it in image view
         String posterUrl = intent.getStringExtra("posterUrl");
-        android.util.Log.e("Poster url", posterUrl);
+        //android.util.Log.e("Poster url", posterUrl);
         ImageView imageViewMovie = (ImageView) findViewById(R.id.imageViewMovie);
 
         com.squareup.picasso.Picasso.with(getApplicationContext())

@@ -49,4 +49,6 @@ public class movie implements android.os.Parcelable {
         this.release_Date = releaseDate;
         this.vote_average = vote_average;
     }
+
+    public String getPosterUrl() {return this.posterUrl;}
 }
