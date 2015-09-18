@@ -17,6 +17,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
+
+
         //Setting the movie title
         String movieTitle = intent.getStringExtra("original_Title");
         TextView txtViewMovieTitle = (TextView) findViewById(R.id.txtViewMovieTitle);
@@ -36,7 +38,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .load(posterUrl)
                 .into(imageViewMovie);
 
-        //Setting the vote average
+        //Setting the vote averag
         String voteAvg = intent.getStringExtra("vote_average");
         TextView txtViewVoteAvg = (TextView) findViewById(R.id.txtViewVoteAvg);
         txtViewVoteAvg.setText(voteAvg + "/10");
@@ -47,6 +49,9 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         if (release_date.length() != 0 && release_date.length() >= 4) txtViewReleaseDate.setText(release_date.substring(0, 4));
 
+        //Getting the movieVideo
+        String[] movieVideKeys = intent.getStringArrayExtra("movieVideoIds");
+        String[] movieReviews = intent.getStringArrayExtra("movieReviews");
 
     }
 
@@ -77,4 +82,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

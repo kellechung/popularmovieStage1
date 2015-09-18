@@ -1,37 +1,40 @@
-
-
 package com.example.kellychung.popularmovie;
 
-        public class SettingsActivity extends android.preference.PreferenceActivity implements android.preference.Preference.OnPreferenceChangeListener {
+import android.preference.PreferenceManager;
+import android.preference.Preference;
+import android.preference.ListPreference;
+import android.preference.PreferenceActivity;
+
+public class SettingsActivity extends  PreferenceActivity  implements Preference.OnPreferenceChangeListener {
 
     @Override
     protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // setContentView(R.layout.activity_settings);
-        addPreferencesFromResource(com.example.kellychung.popularmovie.R.xml.pref_general);
+        addPreferencesFromResource(R.xml.pref_general);
         bindPreferenceSummaryToValue(findPreference("sort"));
 
     }
 
-    private void bindPreferenceSummaryToValue(android.preference.Preference preference){
+    private void bindPreferenceSummaryToValue(Preference preference){
 
         preference.setOnPreferenceChangeListener(this);
 
-        onPreferenceChange(preference, android.preference.PreferenceManager
-                .getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(),""));
+        onPreferenceChange(preference, PreferenceManager
+                .getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(), ""));
 
 
 
     }
 
     @Override
-    public boolean onPreferenceChange(android.preference.Preference preference, Object value) {
+    public boolean onPreferenceChange( Preference preference, Object value) {
         String stringValue = value.toString();
 
-        if (preference instanceof android.preference.ListPreference) {
+        if (preference instanceof ListPreference) {
             // For list preferences, look up the correct display value in
             // the preference's 'entries' list (since they have separate labels/values).
-            android.preference.ListPreference listPreference = (android.preference.ListPreference) preference;
+             ListPreference listPreference = (ListPreference) preference;
             int prefIndex = listPreference.findIndexOfValue(stringValue);
             if (prefIndex >= 0) {
                 preference.setSummary(listPreference.getEntries()[prefIndex]);
@@ -49,7 +52,7 @@ package com.example.kellychung.popularmovie;
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        getMenuInflater().inflate(com.example.kellychung.popularmovie.R.menu.menu_settings, menu);
         return true;
     }
 
