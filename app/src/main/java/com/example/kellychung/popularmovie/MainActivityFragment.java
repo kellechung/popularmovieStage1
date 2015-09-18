@@ -233,10 +233,13 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
             JSONObject movieJson = new JSONObject(movieJsonStr);
 
             //Storing movie info in array
-            JSONArray movieInfoArray = movieJson.getJSONArray(MOVIE_PAGE);
+            JSONArray movieInfoArray = null;
+                    movieInfoArray = movieJson.getJSONArray(MOVIE_PAGE);
 
 
+            if ( movieInfoArray != null ) {
             movieArray = new movie[movieInfoArray.length()];
+
 
 
             for (int i = 0; i < movieInfoArray.length(); i++) {
@@ -252,28 +255,37 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
                 movie movieObj = new movie(movieID, original_title, posterUrl, overview, release_Date, vote_average,null,null);
                 movieArray[i] = movieObj;
 
-            }
+            }}
 
             return movieArray;
         }
 
 
-        private String[] getMovieData(String movieDataStr, String path)  throws org.json.JSONException {
+        private String[] getMovieData(String movieDataString, String path)  throws org.json.JSONException {
 
             final String MOVIE_RESULTS = "results";
+            org.json.JSONArray movieJsonArray = null;
 
-            org.json.JSONObject movieJsonObj = new org.json.JSONObject(movieDataStr);
-            org.json.JSONArray movieJsonArray = movieJsonObj.getJSONArray(MOVIE_RESULTS);
+
+            String[] movieData = null;
+
+            if (movieDataString != null) {
+            org.json.JSONObject movieJsonObj = new org.json.JSONObject(movieDataString);
+            movieJsonArray = movieJsonObj.getJSONArray(MOVIE_RESULTS);
 
             //Storing movie data in an array
-            String[] movieData = new String[movieJsonArray.length()];
+
+
+
+            if (movieJsonArray != null){
+            movieData= new String[movieJsonArray.length()];}
+
 
             for(int i=0; i<movieJsonArray.length();i++) {
 
-
                 JSONObject singleJsonMovieObj = movieJsonArray.getJSONObject(i);
                 movieData[i]= singleJsonMovieObj.getString(path);
-            }
+            }}
 
 
 
@@ -299,7 +311,8 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
 
 
-            for(int i = 0; i < movieArray.length;i++) {
+
+            for(int i = 0; i < movieArray.length ;i++) {
 
                 String videoUrl = Utility.buildMovieVideoUrl(getActivity(), movieArray[i].movieID);
 
@@ -311,7 +324,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
                 try {
                     movieVideoIds = getMovieData(videoDataStr, "key");
                     movieArray[i].setMovieVideoKey(movieVideoIds);
-                    Log.e("Movie video added", videoUrl);
+
                 } catch (org.json.JSONException e) {
                     e.printStackTrace();
                 }
@@ -322,18 +335,20 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
 
 
-            for(int i = 0; i < movieArray.length;i++) {
+            for(int j = 0; j< movieArray.length;j++) {
 
-                String reviewUrl = Utility.buildMovieReviewUrl(getActivity(), movieArray[i].movieID);
-                Log.e("Content Url", reviewUrl);
+                String reviewUrl = Utility.buildMovieReviewUrl(getActivity(), movieArray[j].movieID);
+                //Log.e("Content Url", reviewUrl);
                  String reviewDataStr = openConnection(reviewUrl);
 
-                 String[] movieReviews = null;
+
 
                  try {
+
+                     String[] movieReviews = null;
                  movieReviews = getMovieData(reviewDataStr, "content");
-                 movieArray[i].setMovieReviews(movieReviews);
-                 Log.e("Movie review", movieReviews.length + "");
+                 movieArray[j].setMovieReviews(movieReviews);
+                 //Log.e("Movie review", movieReviews.length + "");
                  } catch (org.json.JSONException e) {
                  e.printStackTrace();
                  }
