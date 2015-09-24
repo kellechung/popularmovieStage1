@@ -14,8 +14,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,6 +37,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.kellychung.popularmovie.MainActivity" />
+        </activity>
+        <activity
+            android:name=".videoViewer"
+            android:label="@string/title_activity_video_viewer"
+            android:parentActivityName=".MovieDetailActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.kellychung.popularmovie.MovieDetailActivity" />
         </activity>
     </application>
 

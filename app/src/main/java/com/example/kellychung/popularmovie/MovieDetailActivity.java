@@ -5,10 +5,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity implements OnItemClickListener{
+
+    String[] movieVideoKeys;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,8 +21,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
 
         Intent intent = getIntent();
-
-
 
         //Setting the movie title
         String movieTitle = intent.getStringExtra("original_Title");
@@ -36,9 +39,10 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         com.squareup.picasso.Picasso.with(getApplicationContext())
                 .load(posterUrl)
+                .fit()
                 .into(imageViewMovie);
 
-        //Setting the vote averag
+        //Setting the vote average
         String voteAvg = intent.getStringExtra("vote_average");
         TextView txtViewVoteAvg = (TextView) findViewById(R.id.txtViewVoteAvg);
         txtViewVoteAvg.setText(voteAvg + "/10");
@@ -47,11 +51,42 @@ public class MovieDetailActivity extends AppCompatActivity {
         String release_date = intent.getStringExtra("releaseDate");
         TextView txtViewReleaseDate = (TextView) findViewById(R.id.txtViewReleaseDate);
 
-        if (release_date.length() != 0 && release_date.length() >= 4) txtViewReleaseDate.setText(release_date.substring(0, 4));
+        if (release_date != null && release_date.length() >= 4) txtViewReleaseDate.setText(release_date.substring(0, 4));
 
         //Getting the movieVideo
-        String[] movieVideKeys = intent.getStringArrayExtra("movieVideoIds");
+
+        movieVideoKeys = intent.getStringArrayExtra("movieVideoIds");
+
         String[] movieReviews = intent.getStringArrayExtra("movieReviews");
+
+        String[] movieTrailer = new String[movieVideoKeys.length];
+
+
+         ListView listViewVideo = (ListView)findViewById(R.id.list_movie_video);
+         ListView listViewReview = (ListView) findViewById(R.id.list_movie_review);
+
+        //Creating an array so that each movie gets a matching trailer number. Trailer num starts with 1
+
+        for(int i = 0; i < movieVideoKeys.length; i++) {
+
+            movieTrailer[i] = "Watch Trailer " + (i+1);
+
+        }
+
+
+        if (movieVideoKeys.length > 0) {
+
+
+        ArrayAdapter videoListAdapter = new ArrayAdapter(getApplicationContext(), R.layout.list_movie_video, R.id.txtViewMovieLink, movieTrailer);
+
+        listViewVideo.setAdapter(videoListAdapter);
+         videoListAdapter.notifyDataSetChanged();
+        listViewVideo.setOnItemClickListener(this);}
+
+        if (movieReviews.length > 0) {
+        ArrayAdapter reviewListAdapter = new ArrayAdapter(getApplicationContext(), R.layout.list_movie_review, R.id.txtViewMovieReview, movieReviews);
+        listViewReview.setAdapter(reviewListAdapter);
+        reviewListAdapter.notifyDataSetChanged();}
 
     }
 
@@ -84,4 +119,16 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onItemClick(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {
+
+        String movieUrl = Utility.buildYouTubeLink(this, movieVideoKeys[position]);
+        Intent videoIntent = new Intent(getApplicationContext(), videoViewer.class);
+        videoIntent.putExtra("youtubeLink", movieUrl);
+        startActivity(videoIntent);
+
+
+
+
+    }
 }

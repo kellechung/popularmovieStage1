@@ -19,8 +19,8 @@ public class Utility {
 
         Uri uri;
         uri = Uri.parse(movieBaseUrl).buildUpon()
-                .appendPath(movieId)
-                .appendPath("videos")
+                .appendEncodedPath(movieId)
+                .appendEncodedPath("videos")
                 .appendQueryParameter("api_key", context.getResources().getString(R.string.apiKey)).build();
 
         return
@@ -33,8 +33,8 @@ public class Utility {
 
         Uri uri;
         uri = Uri.parse(movieBaseUrl).buildUpon()
-                .appendPath(movieId)
-                .appendPath("reviews")
+                .appendEncodedPath(movieId)
+                .appendEncodedPath("reviews")
                 .appendQueryParameter("api_key", context.getResources().getString(R.string.apiKey)).build();
 
         return uri.toString();

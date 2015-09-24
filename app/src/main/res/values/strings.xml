@@ -15,4 +15,5 @@
     <string name="apiKey" translatable="false">55ce0cbab99baeeda76432f98c2ea8b5</string>
     <string name="youTubeBaseUrl" translatable="false">https://www.youtube.com/watch?v=</string>
     <string name="movieExtraBaseUrl">http://api.themoviedb.org/3/movie</string>
+    <string name="title_activity_video_viewer">videoViewer</string>
 </resources>

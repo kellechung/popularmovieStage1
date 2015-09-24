@@ -3,14 +3,12 @@ package com.example.kellychung.popularmovie;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -139,7 +137,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
         Uri uri;
         String url;
 
-        if (sortOrder == getString(R.string.highest_rated)) {
+        if (sortOrder.equalsIgnoreCase(getString(R.string.highest_rated))) {
 
             uri = Uri.parse(getString(R.string.movie_Base_Url)).buildUpon()
                     .appendQueryParameter("sort_by", "vote_count.desc")
@@ -153,7 +151,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
         }
 
         url = uri.toString() + "&api_key=" + getString(R.string.apiKey);
-        Log.e("uri builder ", url);
+        //Log.e("uri builder ", url);
 
 
         if (isNetworkAvailable()) {
@@ -186,8 +184,8 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
         intent.putExtra("releaseDate", selectedMovie.release_Date);
         intent.putExtra("overview", selectedMovie.overview);
         intent.putExtra("vote_average", selectedMovie.vote_average);
-        //intent.putExtra("movieVideoIds", selectedMovie.movieVideoKeys);
-        //intent.putExtra("movieReviews", selectedMovie.movieReviews);
+        intent.putExtra("movieVideoIds", selectedMovie.movieVideoKeys);
+        intent.putExtra("movieReviews", selectedMovie.movieReviews);
         startActivity(intent);
 
     }
@@ -233,8 +231,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
             JSONObject movieJson = new JSONObject(movieJsonStr);
 
             //Storing movie info in array
-            JSONArray movieInfoArray = null;
-                    movieInfoArray = movieJson.getJSONArray(MOVIE_PAGE);
+            JSONArray movieInfoArray = movieJson.getJSONArray(MOVIE_PAGE);
 
 
             if ( movieInfoArray != null ) {
@@ -264,20 +261,20 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
         private String[] getMovieData(String movieDataString, String path)  throws org.json.JSONException {
 
             final String MOVIE_RESULTS = "results";
-            org.json.JSONArray movieJsonArray = null;
+
 
 
             String[] movieData = null;
 
             if (movieDataString != null) {
             org.json.JSONObject movieJsonObj = new org.json.JSONObject(movieDataString);
-            movieJsonArray = movieJsonObj.getJSONArray(MOVIE_RESULTS);
+                org.json.JSONArray  movieJsonArray = movieJsonObj.getJSONArray(MOVIE_RESULTS);
 
             //Storing movie data in an array
 
 
 
-            if (movieJsonArray != null){
+            if (movieJsonArray != null || movieJsonArray != org.json.JSONObject.NULL){
             movieData= new String[movieJsonArray.length()];}
 
 
@@ -312,54 +309,39 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
 
 
-            for(int i = 0; i < movieArray.length ;i++) {
+            for( movie m : movieArray) {
 
-                String videoUrl = Utility.buildMovieVideoUrl(getActivity(), movieArray[i].movieID);
-
-                Log.e("Check video url", videoUrl);
+                String videoUrl = Utility.buildMovieVideoUrl(getActivity(), m.movieID);
 
                 String videoDataStr = openConnection(videoUrl);
-                String[] movieVideoIds= null;
+                String[] movieVideoIds = null;
+                String[] movieReviews = null;
+
+                String reviewUrl = Utility.buildMovieReviewUrl(getActivity(), m.movieID);
+                String reviewDataStr = openConnection(reviewUrl);
 
                 try {
                     movieVideoIds = getMovieData(videoDataStr, "key");
-                    movieArray[i].setMovieVideoKey(movieVideoIds);
+                    m.setMovieVideoKey(movieVideoIds);
 
                 } catch (org.json.JSONException e) {
                     e.printStackTrace();
                 }
 
+                try {
 
+                    movieReviews = getMovieData(reviewDataStr, "content");
+                    m.setMovieReviews(movieReviews);
+                    //Log.e("Movie review", movieReviews.length + "");
+                } catch (org.json.JSONException e) {
+                    e.printStackTrace();
+                }
             }
-
-
-
-
-            for(int j = 0; j< movieArray.length;j++) {
-
-                String reviewUrl = Utility.buildMovieReviewUrl(getActivity(), movieArray[j].movieID);
-                //Log.e("Content Url", reviewUrl);
-                 String reviewDataStr = openConnection(reviewUrl);
-
-
-
-                 try {
-
-                     String[] movieReviews = null;
-                 movieReviews = getMovieData(reviewDataStr, "content");
-                 movieArray[j].setMovieReviews(movieReviews);
-                 //Log.e("Movie review", movieReviews.length + "");
-                 } catch (org.json.JSONException e) {
-                 e.printStackTrace();
-                 }
-
-
-            }
-
 
             return movieArray;
+            }
 
-        }
+
 
 
 
@@ -382,14 +364,14 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
-                Log.e("CONNECTION", "CONNECTED" + url.toString());
+                //Log.e("CONNECTION", "CONNECTED" + url.toString());
 
                 // Read the input stream into a String
 
                 java.io.InputStream inputStream = urlConnection.getInputStream();
-                Log.e("INPUT STREAM", "WORKING");
+                //Log.e("INPUT STREAM", "WORKING");
                 StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
+                if (inputStream == null ) {
                     Log.e("INPUT STREAM", "NULL INPUT STREAM");
                     //return null;
                 }
@@ -442,8 +424,8 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
                 imageAdapter.clear();
 
 
-                for (int i = 0; i < movieResult.length; i++) {
-                    imageAdapter.add(movieResult[i]);
+                for(movie result: movieResult) {
+                    imageAdapter.add(result);
 
 
 
