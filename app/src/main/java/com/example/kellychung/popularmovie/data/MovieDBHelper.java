@@ -63,6 +63,7 @@ public class MovieDBHelper extends SQLiteOpenHelper {
 
                 reviewEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 reviewEntry.COLUMN_MOVIE_ID + " TEXT NOT NULL, " +
+                reviewEntry.COLUMN_MOVIE_REVIEWS + " TEXT NOT NULL, " +
                 "FOREIGN KEY (" + reviewEntry.COLUMN_MOVIE_ID + ") REFERENCES " +
                 movieEntry.TABLE_NAME + " (" + movieEntry.COLUMN_MOVIE_ID + ") ON DELETE CASCADE) ;";
 
