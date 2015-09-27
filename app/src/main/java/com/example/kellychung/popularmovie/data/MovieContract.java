@@ -9,6 +9,7 @@ public class MovieContract {
 
 
     //Setting the content authority to be equal to package name
+
     public static final String CONTENT_AUTHORITY = "com.example.kellychung.popularmovie";
 
     // Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
