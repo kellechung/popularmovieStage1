@@ -3,6 +3,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_sort">Sort</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_showFavorite">Show Favorite Movies</string>
     <string name="action_settings">Settings</string>
     <string name="most_popular">Most Popular</string>
     <string name="highest_rated">Highest Rated</string>

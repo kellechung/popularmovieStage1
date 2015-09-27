@@ -38,14 +38,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.kellychung.popularmovie.MainActivity" />
         </activity>
-        <activity
-            android:name=".videoViewer"
-            android:label="@string/title_activity_video_viewer"
-            android:parentActivityName=".MovieDetailActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.kellychung.popularmovie.MovieDetailActivity" />
-        </activity>
     </application>
 
 </manifest>

@@ -307,8 +307,6 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
             }
 
 
-
-
             for( movie m : movieArray) {
 
                 String videoUrl = Utility.buildMovieVideoUrl(getActivity(), m.movieID);
@@ -320,13 +318,16 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
                 String reviewUrl = Utility.buildMovieReviewUrl(getActivity(), m.movieID);
                 String reviewDataStr = openConnection(reviewUrl);
 
-                try {
+                try
+
+                {
                     movieVideoIds = getMovieData(videoDataStr, "key");
                     m.setMovieVideoKey(movieVideoIds);
 
                 } catch (org.json.JSONException e) {
                     e.printStackTrace();
                 }
+
 
                 try {
 
@@ -340,6 +341,9 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
             return movieArray;
             }
+
+
+
 
 
 
@@ -364,18 +368,20 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
-                //Log.e("CONNECTION", "CONNECTED" + url.toString());
+
 
                 // Read the input stream into a String
-
                 java.io.InputStream inputStream = urlConnection.getInputStream();
-                //Log.e("INPUT STREAM", "WORKING");
+
+
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null ) {
-                    Log.e("INPUT STREAM", "NULL INPUT STREAM");
-                    //return null;
+                return "";
+
                 }
                 reader = new BufferedReader(new InputStreamReader(inputStream));
+
+
 
                 String line;
                 while ((line = reader.readLine()) != null) {
