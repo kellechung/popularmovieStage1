@@ -1,6 +1,6 @@
 import com.example.kellychung.popularmovie.data.MovieContract.movieEntry;
-import com.example.kellychung.popularmovie.data.MovieContract.videoEntry;
 import com.example.kellychung.popularmovie.data.MovieContract.reviewEntry;
+import com.example.kellychung.popularmovie.data.MovieContract.videoEntry;
 import com.example.kellychung.popularmovie.data.MovieDBHelper;
 
 import android.content.ContentValues;
@@ -108,25 +108,20 @@ public class TestDb extends AndroidTestCase {
 
         //Checking the data in the video table
         String[] videoColumns = {videoEntry.COLUMN_MOVIE_ID, videoEntry.COLUMN_VIDEO_KEYS};
-        Cursor videoCursor = db.query(videoEntry.TABLE_NAME,videoColumns, null, null, null, null, null);
+        Cursor videoCursor = db.query(videoEntry.TABLE_NAME, videoColumns, null, null, null, null, null);
 
 
-
-            if (!videoCursor.moveToFirst()) {
-                fail("No video data returned!");
-            }
-
-            else {
-                int colIndex = videoCursor.getColumnIndex(videoColumns[0]);
-                String videoColVal = videoCursor.getString(colIndex);
-                assertEquals(v1ContentValues.get(videoColumns[0]), videoColVal);
-            }
+        if (!videoCursor.moveToFirst()) {
+            fail("No video data returned!");
+        } else {
+            int colIndex = videoCursor.getColumnIndex(videoColumns[0]);
+            String videoColVal = videoCursor.getString(colIndex);
+            assertEquals(v1ContentValues.get(videoColumns[0]), videoColVal);
+        }
 
         if (!videoCursor.moveToLast()) {
             fail("No video data returned!");
-        }
-
-        else {
+        } else {
             int colIndex = videoCursor.getColumnIndex(videoColumns[1]);
             String videoColVal = videoCursor.getString(colIndex);
             assertEquals(v2ContentValues.get(videoColumns[1]), videoColVal);
@@ -136,7 +131,7 @@ public class TestDb extends AndroidTestCase {
 
         //Testing data insertion in the review rows
         //Next test video table
-        final String test_review_movieId= "movie_id";
+        final String test_review_movieId = "movie_id";
         final String test_review = "review";
 
         String[] reviewColumns = {reviewEntry.COLUMN_MOVIE_ID, reviewEntry.COLUMN_MOVIE_REVIEWS};
@@ -150,10 +145,9 @@ public class TestDb extends AndroidTestCase {
 
         Cursor reviewsCursor = db.query(reviewEntry.TABLE_NAME, reviewColumns, null, null, null, null, null);
 
-        if (!reviewsCursor.moveToFirst())  {fail("No review data is returned");}
-
-
-        else {
+        if (!reviewsCursor.moveToFirst()) {
+            fail("No review data is returned");
+        } else {
 
             for (int i = 0; i < reviewColumns.length; i++) {
 
