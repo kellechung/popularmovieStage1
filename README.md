@@ -1,7 +1,7 @@
 # popularmovieStage1
 
 NOTE:
-Before running the app, make sure to add moviedb api key to string.xml file. API is obtained through request.
+Before running the app, make sure to add moviedb api key to string.xml file. API is obtained through request to the website.
 
 This is a small android app which fetches data from movieDB.org. The user is presented with a list of movie poster images. The movie posters can be sorted by highest ratings or most popular movies. The user can pick a movie, get more details about the movie and watch movie trailers .
 
