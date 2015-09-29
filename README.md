@@ -1,4 +1,4 @@
-# popularmovieStage1
+# popularmovieStage
 
 NOTE:
 Before running the app, make sure to add moviedb api key to string.xml file. API is obtained through request to the website.
