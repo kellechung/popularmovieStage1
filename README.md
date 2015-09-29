@@ -10,7 +10,7 @@ This is a small android app which fetches data from movieDB.org. The user is pre
 <img src="https://cloud.githubusercontent.com/assets/11304162/10153664/a270c396-662c-11e5-847e-d66a22bb8c75.jpg" length = "500" width="275">
 
 Left to do:
-1. SQLite database implementation to store local movies
-2. Adding android tests  
-3. Tablet layout
-3. Code clean up
+  1. SQLite database implementation to store local movies
+  2. Adding android tests  
+  3. Tablet layout
+  4. Code clean up
